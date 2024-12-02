@@ -1,0 +1,64 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+@if(ViewBag.ListaDeportes != null && ViewBag.ListaPaises == null)
+{
+    foreach(Deporte dep in ViewBag.ListaDeportes)
+    {
+        <h2>@dep.Nombre</h2>
+        <img src="@dep.Foto">
+        <a href="@Url.Action("VerDetalleDeporte", new{IdDeporte = dep.IdDeportes})">Ver más info</a><br/>
+    }
+    <a href="@Url.Action("AgregarDeportista")">Agregar Deportista</a>
+}
+
+@if(ViewBag.Deporte != null)
+{
+    <h2>@ViewBag.Deporte.Nombre</h2>
+    <img src="@ViewBag.Deporte.Foto"><br/>
+    foreach(Deportista dep in ViewBag.ListaDeportistas)
+    {
+        <h2>@dep.Nombre @dep.Apellido</h2>
+        <img src="@dep.Foto">
+        <a href="@Url.Action("VerDetalleDeportista", new{IdDeportista = dep.IdDeportistas})">Ver más info</a><br/>
+    }
+}
+
+@if(ViewBag.Deportista != null)
+{
+    <h2>@ViewBag.Deportista.Nombre @ViewBag.Deportista.Apellido</h2>
+    <img src="@ViewBag.Deportista.Foto"><br/>
+    <p>Fecha de nacimiento: @ViewBag.Deportista.FechaNacimiento</p>
+    <p>Calificación Olímpica: @ViewBag.Deportista.CalificacionOlimpica</p>
+    <a href="@Url.Action("EliminarDeportista", new{IdDeportista = ViewBag.Deportista.IdDeportistas})">Eliminar</a><br/>
+}
+
+@if(ViewBag.ListaDeportes != null && ViewBag.ListaPaises != null)
+{
+    <form action='@Url.Action("GuardarDeportista")' method="post" onsubmit="return validar()">
+    <input type="text" name="apellido" placeholder="apellido" required><br/>
+    <input type="text" name="nombre" placeholder="nombre" required><br/>
+    <input type="date" name="fechaNacimiento" id="fechaNacimiento" required><br/>
+    <p id="mensajeError" style="color: red;"></p>
+    <input type="number" name="calificacion" placeholder="calificacion olimimpica" id="calificacionOlimpica" required><br/>
+    <p id="mensajeError2" style="color: red;"></p>
+    <input type="text" name="foto" placeholder="Ingrese link a foto"><br/>
+    <select name="idPais">
+        <option value="" selected disabled>Seleccione el país</option>
+        @foreach(Pais item in ViewBag.ListaPaises)
+        {
+            <option value="@item.IdPais">@item.Nombre</option>
+        }
+    </select><br/>
+    <select name="idDeporte">
+        <option value="" selected disabled>Seleccione el deporte</option>
+        @foreach(Deporte item in ViewBag.ListaDeportes)
+        {
+            <option value="@item.IdDeportes">@item.Nombre</option>
+        }
+    </select><br/>
+    <input type="submit" value="Agregar">
+</form>
+}
+<script src="~/js/site.js"></script>
